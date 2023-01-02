@@ -27,7 +27,8 @@
                                 <td>{{ $loop->index+1 }}</td>
                                 <td>{{ $role->name }}</td>
                                 <td>
-                                    -
+                                    <a class="btn btn-success text-white" href="{{ route('roles.edit',$role->id) }}">Edit</a>
+                                    <a class="btn btn-danger text-white" href="">Delete</a>
                                 </td>
 
                             </tr>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -28,7 +29,9 @@ class RolesController extends Controller
     public function create()
     {
         $permissions = Permission::all();
-        return view('backend.pages.roles.create',compact('permissions'));
+        $permission_groups = User::getpermissionGroup();
+        // dd($permissions_group);
+        return view('backend.pages.roles.create',compact('permissions','permission_groups'));
     }
 
     /**
@@ -39,7 +42,17 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        Role::create(['name' => $request->name]);
+        $request->validate([
+            'name' => 'required|max:100|unique:roles'
+        ],[
+            'name.required' => 'please write a role name'
+        ]);
+
+       $role = Role::create(['name' => $request->name]);
+       $permissions = $request->permissions;
+       if(!empty($permissions)){
+        $role->syncPermissions($permissions);
+       }
         return redirect()->route('roles.index')->with('message','Role added Successfully');;
     }
 
@@ -62,7 +75,10 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Role::findById($id);
+        $permissions = Permission::all();
+        $permission_groups = User::getpermissionGroup();
+        return view('backend.pages.roles.edit',compact('role','permissions','permission_groups'));
     }
 
     /**

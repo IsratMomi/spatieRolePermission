@@ -9,20 +9,22 @@
 @endsection
 @section('content')
 
-@section('page_title','Role Create')
+@section('page_title')
+    Role Edit- {{ $role->name }}
+@endsection
 
 <div class="main-content-inner">
 <div class="row">
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Role Create</h4>
+                <h4 class="header-title">Role Edit</h4>
                 @include('backend.layouts.includes.messages')
-                <form action="{{ route('roles.store') }}" method="POST">
+                <form action="{{ route('roles.update', $role->id) }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name"  placeholder="Enter role name">
+                        <input type="text" class="form-control" id="name" name="name" value="{{ $role->name }}"  placeholder="Enter role name">
 
                     </div>
                     <div class="form-group">
@@ -35,20 +37,21 @@
                         @php $i = 1; @endphp
                         @foreach ($permission_groups as $group )
                             <div class="row">
+                                @php
+                                $permissions = App\Models\User::getpermissionByGroupName($group->name);
+                                $j = 1;
+                                @endphp
                                 <div class="col-3">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="" id="{{ $i }}Management" value="{{ $group->name }}" onclick="checkPermissionByGroup('role-{{ $i }}-management-checkbox', this)">
+                                        <input type="checkbox" class="form-check-input" name="" id="{{ $i }}Management" value="{{ $group->name }}" onclick="checkPermissionByGroup('role-{{ $i }}-management-checkbox', this)" {{ App\Models\User::roleHasPermission($role,$permissions) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="checkPermission">{{ $group->name }}</label>
                                     </div>
                                 </div>
                                 <div class="col-9 role-{{ $i }}-management-checkbox">
-                                    @php
-                                        $permissions = App\Models\User::getpermissionByGroupName($group->name);
-                                        $j = 1;
-                                    @endphp
+
                                     @foreach ($permissions as $permission )
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" name="permissions[]" id="checkPermission{{ $permission->id }}" value="{{ $permission->name }}">
+                                            <input type="checkbox" class="form-check-input" name="permissions[]" {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }} id="checkPermission{{ $permission->id }}" value="{{ $permission->name }}">
                                             <label class="form-check-label" for="checkPermission{{ $permission->id }}">{{ $permission->name }}</label>
                                         </div>
                                         @php $j++; @endphp
