@@ -17,6 +17,9 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Role Create</h4>
+                <p class="float-right mb-2">
+                    <a class="btn btn-primary text-white" href="{{ route('roles.index') }}">All Role</a>
+                </p>
                 @include('backend.layouts.includes.messages')
                 <form action="{{ route('roles.store') }}" method="POST">
                     @csrf

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -53,7 +54,8 @@ class RolesController extends Controller
        if(!empty($permissions)){
         $role->syncPermissions($permissions);
        }
-        return redirect()->route('roles.index')->with('message','Role added Successfully');;
+
+        return redirect()->route('roles.index')->with('success','Role added Successfully');
     }
 
     /**
@@ -76,9 +78,10 @@ class RolesController extends Controller
     public function edit($id)
     {
         $role = Role::findById($id);
-        $permissions = Permission::all();
+        // dd($role->permissions);
+        $all_permission = Permission::all();
         $permission_groups = User::getpermissionGroup();
-        return view('backend.pages.roles.edit',compact('role','permissions','permission_groups'));
+        return view('backend.pages.roles.edit',compact('role','all_permission','permission_groups'));
     }
 
     /**
@@ -90,7 +93,19 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:100|unique:roles,name,' . $id
+        ],[
+            'name.required' => 'please write a role name'
+        ]);
+
+       $role = Role::findById($id);
+       $permissions = $request->permissions;
+       if(!empty($permissions)){
+        $role->syncPermissions($permissions);
+       }
+
+        return redirect()->back()->with('success','Role updated');
     }
 
     /**
@@ -101,6 +116,12 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        //
+    //    dd($id);
+        $role = Role::findById($id);
+        if(!is_null($role)){
+            $role->delete();
+        }
+
+        return redirect()->back()->with('success','Role deleted');
     }
 }

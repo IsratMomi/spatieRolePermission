@@ -19,8 +19,12 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Role Edit</h4>
+                <p class="float-right mb-2">
+                    <a class="btn btn-primary text-white" href="{{ route('roles.index') }}">All Role</a>
+                </p>
                 @include('backend.layouts.includes.messages')
                 <form action="{{ route('roles.update', $role->id) }}" method="POST">
+                    @method('PUT')
                     @csrf
                     <div class="form-group">
                         <label for="name">Name</label>
@@ -30,7 +34,7 @@
                     <div class="form-group">
                         <label for="name">Permissions</label>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="" id="checkPermissionAll" value="1">
+                            <input type="checkbox" class="form-check-input" name="" id="checkPermissionAll" value="1" {{ App\Models\User::roleHasPermission($role,$all_permission) ? 'checked' : '' }}>
                             <label class="form-check-label" for="checkPermissionAll">All</label>
                         </div>
                         <hr>
@@ -51,7 +55,7 @@
 
                                     @foreach ($permissions as $permission )
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" name="permissions[]" {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }} id="checkPermission{{ $permission->id }}" value="{{ $permission->name }}">
+                                            <input type="checkbox" class="form-check-input" onclick="checkSinglePermission('role-{{ $i }}-management-checkbox','{{ $i }}Management',{{ count($permissions) }})" name="permissions[]" {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }} id="checkPermission{{ $permission->id }}" value="{{ $permission->name }}">
                                             <label class="form-check-label" for="checkPermission{{ $permission->id }}">{{ $permission->name }}</label>
                                         </div>
                                         @php $j++; @endphp
@@ -82,6 +86,7 @@
             else{
                 $('input[type=checkbox]').prop('checked',false);
             }
+
         });
 
         function checkPermissionByGroup(className, checkThis){
@@ -92,6 +97,31 @@
             }
             else{
                 classCheckBox.prop('checked',false);
+            }
+            implementAllChecked();
+        }
+        function checkSinglePermission(groupClassName, groupID, countTotalPermission){
+            const classCheckBox = $('.'+groupClassName+ ' input');
+            const groupIDCheckBox = $("#"+groupID);
+
+            if($('.'+groupClassName+ ' input:checked').length == countTotalPermission){
+                groupIDCheckBox.prop('checked',true);
+            }
+            else{
+                groupIDCheckBox.prop('checked',false);
+            }
+            implementAllChecked();
+        }
+
+        function implementAllChecked(){
+            const countPermissions = {{ count($all_permission) }};
+            const countPermissionGroups = {{ count($permission_groups) }};
+            // console.log(countPermissionGroups + countPermissions);
+            if($('input[type="checkbox"]:checked').length >= (countPermissions + countPermissionGroups)){
+                $("#checkPermissionAll").prop('checked',true);
+            }
+            else{
+                $("#checkPermissionAll").prop('checked',false);
             }
         }
     </script>

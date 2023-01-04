@@ -1,19 +1,20 @@
 @extends('backend.layouts.master')
-@section('title') Dashboard @endsection
+@section('title') Users @endsection
 @section('custome_css')
+
 @endsection
 @section('content')
 
-@section('page_title','Roles')
+@section('page_title','Users')
 
 <div class="main-content-inner">
 <div class="row">
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Roles</h4>
+                <h4 class="header-title">Users</h4>
                 <p class="float-right mb-2">
-                    <a class="btn btn-primary text-white" href="{{ route('roles.create') }}">Add Role</a>
+                    <a class="btn btn-primary text-white" href="{{ route('users.create') }}">Add User</a>
                 </p>
                 <div class="clearfix">
 
@@ -25,29 +26,30 @@
                             <tr>
                                 <th width="5%">SL</th>
                                 <th width="10%">Name</th>
-                                <th width="60%">Permission</th>
+                                <th width="10%">Email</th>
+                                <th width="50%">Role</th>
                                 <th width="25%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($roles as $role)
+                            @foreach ($users as $user)
                             <tr>
-                                <td>{{ $loop->index+1 }}</td>
-                                <td>{{ $role->name }}</td>
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+
                                 <td>
 
-                                    @foreach ($role->permissions as $permission )
-                                        <span class="badge badge-info mr-1">{{ $permission->name }}</span>
-                                    @endforeach
+
                                 </td>
                                 <td>
-                                    <a class="btn btn-success text-white" href="{{ route('roles.edit',$role->id) }}">Edit</a>
-                                    <a class="btn btn-danger text-white" href="{{ route('roles.destroy',$role->id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $role->id }}').submit();">
+                                    <a class="btn btn-success text-white" href="{{ route('users.edit',$user->id) }}">Edit</a>
+                                    <a class="btn btn-danger text-white" href="{{ route('users.destroy',$user->id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $user->id }}').submit();">
 
                                     Delete
 
                                     </a>
-                                    <form id="delete-form-{{ $role->id }}" action="{{ route('roles.destroy',$role->id) }}" method="POST">
+                                    <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy',$user->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
                                     </form>
@@ -67,5 +69,6 @@
 </div>
 @endsection
 @section('custom_js')
+
 @endsection
 
