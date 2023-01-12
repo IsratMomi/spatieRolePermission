@@ -24,17 +24,18 @@ Route::get('/', function () {
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
-Route::group(['middleware' => 'auth','prefix'=> 'admin'],function(){
+Route::group(['middleware' => 'admin','prefix'=> 'admin'],function(){
 
     Route::get('/dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
     Route::resource('roles', RolesController::class);
     Route::resource('users', UserController::class);
+    Route::get('/admin-logout',[AdminController::class,'logoutAdmin'])->name('admin.logout');
 });
 
 Route::prefix('admin-login')->group(function(){
     Route::get('/login',[AdminController::class,'index'])->name('login.page');
-    Route::get('/login/owner',[AdminController::class,'login'])->name('admin.login');
-    Route::get('/dashboard',[AdminController::class,'dashboard'])->name('admin.dashboard');
+    Route::post('/login/owner',[AdminController::class,'login'])->name('admin.login');
+    // Route::get('/dashboard',[AdminController::class,'dashboard'])->name('admin.dashboard');
 });
 // Route::prefix('admin')->group(function () {
 

@@ -21,6 +21,14 @@
         <div class="main-content">
 
            @include('backend.layouts.includes.header')
+           @if(Session::has('success'))
+
+           <div class="alert alert-success alert-dismissible text-center" role="alert">
+               <strong>{{ Session::get('success') }} !!</strong>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+             </div>
+
+           @endif
            <div class="page-title-area">
             <div class="row align-items-center">
                 <div class="col-sm-6">
@@ -35,11 +43,11 @@
                 <div class="col-sm-6 clearfix">
                     <div class="user-profile pull-right">
                         <img class="avatar user-thumb" src="{{ asset('backend/assets/images/author/avatar.png') }}" alt="avatar">
-                        <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Kumkum Rai <i class="fa fa-angle-down"></i></h4>
+                        <h4 class="user-name dropdown-toggle" data-toggle="dropdown">{{ Auth::guard('admin')->user()->name }}<i class="fa fa-angle-down"></i></h4>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#">Message</a>
                             <a class="dropdown-item" href="#">Settings</a>
-                            <a class="dropdown-item" href="#">Log Out</a>
+                            <a class="dropdown-item" href="{{ route('admin.logout') }}">Log Out</a>
                         </div>
                     </div>
                 </div>
