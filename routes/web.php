@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\UserController;
@@ -24,9 +25,16 @@ Route::get('/', function () {
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
 Route::group(['middleware' => 'auth','prefix'=> 'admin'],function(){
+
     Route::get('/dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
     Route::resource('roles', RolesController::class);
     Route::resource('users', UserController::class);
+});
+
+Route::prefix('admin-login')->group(function(){
+    Route::get('/login',[AdminController::class,'index'])->name('login.page');
+    Route::get('/login/owner',[AdminController::class,'login'])->name('admin.login');
+    Route::get('/dashboard',[AdminController::class,'dashboard'])->name('admin.dashboard');
 });
 // Route::prefix('admin')->group(function () {
 
