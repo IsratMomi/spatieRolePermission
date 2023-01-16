@@ -13,9 +13,13 @@ class AdminController extends Controller
 
     public function login(Request $request){
         // dd($request);
+        $request->validate([
+            'email' =>'required|email|max:50',
+            'password' => 'required',
+        ]);
 
         $check = $request->all();
-        if(Auth::guard('admin')->attempt(['email' => $check['email'], 'password' => $check['password']])){
+        if(Auth::guard('admin')->attempt(['email' => $check['email'], 'password' => $check['password'],'is_admin' => 1])){
             return redirect()->route('admin.dashboard')->with('success','Admin login successfull');
         }
         else{
@@ -24,7 +28,7 @@ class AdminController extends Controller
     }
 
     public function logoutAdmin(){
-    
+
         Auth::guard('admin')->logout();
         return redirect()->route('login.page')->with('success','Logout successfully!!');
     }

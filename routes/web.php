@@ -21,12 +21,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
 Route::group(['middleware' => 'admin','prefix'=> 'admin'],function(){
 
-    Route::get('/dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
+    Route::get('/admin-dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
     Route::resource('roles', RolesController::class);
     Route::resource('users', UserController::class);
     Route::get('/admin-logout',[AdminController::class,'logoutAdmin'])->name('admin.logout');

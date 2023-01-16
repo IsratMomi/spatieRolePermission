@@ -15,7 +15,7 @@
                     <h4>Sign In</h4>
                     <p>Hello there, Sign in and start managing your Admin Portal</p>
                 </div>
-                @if(Session::has('error'))
+                {{-- @if(Session::has('error'))
 
                 <div class="alert alert-warning alert-dismissible text-center" role="alert">
                     <strong>{{ Session::get('error') }} !!</strong>
@@ -30,7 +30,9 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   </div>
 
-                @endif
+                @endif --}}
+
+                @include('backend.layouts.includes.messages')
                 <div class="login-form-body">
                     <div class="form-gp">
                         <label for="exampleInputEmail1">Email address</label>
