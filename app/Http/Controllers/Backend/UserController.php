@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -18,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = Admin::all();
         return view('backend.pages.users.index',compact('users'));
     }
 
@@ -46,7 +47,7 @@ class UserController extends Controller
             'email' => 'required|max:100|email|unique:users',
             'password' => 'required|min:6|confirmed'
         ]);
-        $user = new User();
+        $user = new Admin();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
@@ -78,7 +79,7 @@ class UserController extends Controller
     public function edit($id)
     {
         // dd($id);
-        $user = User::find($id);
+        $user = Admin::find($id);
         $roles = Role::all();
         return view('backend.pages.users.edit',compact('user','roles'));
     }
@@ -92,11 +93,11 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = Admin::find($id);
         // dd($user);
         $request->validate([
             'name' => 'required|max:50',
-            'email' => 'required|max:100|email|unique:users,email,' . $id,
+            'email' => 'required|max:100|email|unique:admins,email,' . $id,
             'password' => 'nullable|min:6|confirmed'
         ]);
 
