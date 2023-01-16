@@ -12,13 +12,19 @@
 @section('page_title','Role Create')
 
 <div class="main-content-inner">
+    <?php
+        $user = Auth::guard('admin')->user();
+    ?>
 <div class="row">
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Role Create</h4>
                 <p class="float-right mb-2">
-                    <a class="btn btn-primary text-white" href="{{ route('roles.index') }}">All Role</a>
+                    @if ($user->can('role.view'))
+                        <a class="btn btn-primary text-white" href="{{ route('roles.index') }}">All Role</a>
+                    @endif
+
                 </p>
                 @include('backend.layouts.includes.messages')
                 <form action="{{ route('roles.store') }}" method="POST">

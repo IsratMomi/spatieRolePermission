@@ -8,13 +8,20 @@
 @section('page_title','Users')
 
 <div class="main-content-inner">
+    <?php
+        $authuser = Auth::guard('admin')->user();
+        // dd($user->can('admin.delete'));
+    ?>
 <div class="row">
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Users</h4>
                 <p class="float-right mb-2">
-                    <a class="btn btn-primary text-white" href="{{ route('users.create') }}">Add User</a>
+                    @if ($authuser->can('admin.create'))
+                        <a class="btn btn-primary text-white" href="{{ route('users.create') }}">Add User</a>
+                    @endif
+
                 </p>
                 <div class="clearfix">
 
@@ -45,12 +52,13 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a class="btn btn-success text-white" href="{{ route('users.edit',$user->id) }}">Edit</a>
-                                    <a class="btn btn-danger text-white" href="{{ route('users.destroy',$user->id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $user->id }}').submit();">
+                                    @if ($authuser->can('admin.edit'))
+                                        <a class="btn btn-success text-white" href="{{ route('users.edit',$user->id) }}">Edit</a>
+                                    @endif
+                                    @if ($authuser->can('admin.delete'))
+                                        <a class="btn btn-danger text-white" href="{{ route('users.destroy',$user->id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $user->id }}').submit();">Delete</a>
+                                    @endif
 
-                                    Delete
-
-                                    </a>
                                     <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy',$user->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf

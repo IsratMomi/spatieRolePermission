@@ -7,13 +7,19 @@
 @section('page_title','Roles')
 
 <div class="main-content-inner">
+    <?php
+        $user = Auth::guard('admin')->user();
+    ?>
 <div class="row">
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Roles</h4>
                 <p class="float-right mb-2">
-                    <a class="btn btn-primary text-white" href="{{ route('roles.create') }}">Add Role</a>
+                    @if ($user->can('role.create'))
+                        <a class="btn btn-primary text-white" href="{{ route('roles.create') }}">Add Role</a>
+                    @endif
+
                 </p>
                 <div class="clearfix">
 
@@ -41,12 +47,14 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a class="btn btn-success text-white" href="{{ route('roles.edit',$role->id) }}">Edit</a>
-                                    <a class="btn btn-danger text-white" href="{{ route('roles.destroy',$role->id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $role->id }}').submit();">
+                                    @if ($user->can('role.edit'))
+                                        <a class="btn btn-success text-white" href="{{ route('roles.edit',$role->id) }}">Edit</a>
+                                    @endif
+                                    @if ($user->can('role.delete'))
+                                        <a class="btn btn-danger text-white" href="{{ route('roles.destroy',$role->id) }}" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $role->id }}').submit();">Delete</a>
+                                    @endif
+                                 
 
-                                    Delete
-
-                                    </a>
                                     <form id="delete-form-{{ $role->id }}" action="{{ route('roles.destroy',$role->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf

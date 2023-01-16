@@ -9,9 +9,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public $user;
+
+    public function __construct(){
+        $this->middleware(function($request, $next){
+            $this->user = Auth::guard('admin')->user();
+            return $next($request);
+
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,6 +29,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        if(is_null($this->user)|| !$this->user->can('admin.view')){
+            abort(403, 'Unauthorized access');
+        }
         $users = Admin::all();
         return view('backend.pages.users.index',compact('users'));
     }
@@ -30,6 +43,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if(is_null($this->user)|| !$this->user->can('admin.create')){
+            abort(403, 'Unauthorized access');
+        }
         $roles = Role::all();
         return view('backend.pages.users.create',compact('roles'));
     }
@@ -42,6 +58,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if(is_null($this->user)|| !$this->user->can('admin.create')){
+            abort(403, 'Unauthorized access');
+        }
         $request->validate([
             'name' => 'required|max:50',
             'email' => 'required|max:100|email|unique:users',
@@ -78,6 +97,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        if(is_null($this->user)|| !$this->user->can('admin.edit')){
+            abort(403, 'Unauthorized access');
+        }
         // dd($id);
         $user = Admin::find($id);
         $roles = Role::all();
@@ -93,6 +115,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(is_null($this->user)|| !$this->user->can('admin.update')){
+            abort(403, 'Unauthorized access');
+        }
         $user = Admin::find($id);
         // dd($user);
         $request->validate([
@@ -124,6 +149,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        if(is_null($this->user)|| !$this->user->can('admin.delete')){
+            abort(403, 'Unauthorized access');
+        }
     //    dd($id);
         $user = User::find($id);
         if(!is_null($user)){
