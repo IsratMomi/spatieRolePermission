@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\PermissionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,7 @@ Route::group(['middleware' => 'admin','prefix'=> 'admin'],function(){
 
     Route::get('/admin-dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
     Route::resource('roles', RolesController::class);
+    Route::resource('permissions', PermissionController::class);
     Route::resource('users', UserController::class);
     Route::get('/admin-logout',[AdminController::class,'logoutAdmin'])->name('admin.logout');
 });

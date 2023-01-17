@@ -28,6 +28,7 @@
                                 @if ($user->can('role.view'))
                                     <li><a href="{{ route('roles.index') }}">Roles</a></li>
                                 @endif
+                                    <li><a href="{{ route('permissions.index') }}">Permissions</a></li>
 
                             </ul>
                         </li>
